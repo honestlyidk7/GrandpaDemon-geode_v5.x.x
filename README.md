@@ -28,6 +28,8 @@ This fork updates the mod to work with newer versions of Geode (v5) and fixes AR
 - **Geometry Dash:** `2.2081`
 - **Geode:** `5.0.1`
 
+## Below is the original readme for the mod.
+
 # Grandpa Demon
 A mod created by ItzKiba.
 
