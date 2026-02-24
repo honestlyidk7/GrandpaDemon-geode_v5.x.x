@@ -4,6 +4,8 @@ Unofficial compatibility patch/fork of the GrandpaDemon mod by ItzKiba (last upd
 
 This fork updates the mod to work with newer versions of Geode (v5) and fixes AREDL API fetching by migrating from the old deprecated endpoint to the current AREDL v2 API.
 
+To download this, go to releases and select `itzkiba.grandpa_demon.geode`. You can move that file into your Geode mods folder.
+
 ## Credits
 
 - Original mod: [ItzKiba / GrandpaDemon](https://github.com/ItzKiba/GrandpaDemon)
