@@ -1,5 +1,5 @@
 # v1.2.1
-* Made compatible with 2.2082
+* Made compatible with 2.2081
 
 # v1.2.0
 * Made compatible with 2.206
