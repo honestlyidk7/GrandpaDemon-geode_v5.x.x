@@ -1,7 +1,12 @@
 # v1.2.1
+
 * Made compatible with 2.2081
+* Updated the mod for Geode v5 compatibility
+* Fixed AREDL list loading
+* Added a safe fallback in sprite selection logic
 
 # v1.2.0
+
 * Made compatible with 2.206
 * Fixed a crash that occured when trying to search for Grandpa Demons with Grandpa Demon disabled
 
