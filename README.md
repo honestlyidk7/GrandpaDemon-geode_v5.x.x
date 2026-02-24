@@ -1,13 +1,13 @@
 # GrandpaDemon (Unofficial Geode v5 + AREDL v2 Fix)
 
-Unofficial compatibility patch/fork of **GrandpaDemon** by **ItzKiba**.
+Unofficial compatibility patch/fork of the GrandpaDemon mod by ItzKiba (last updated in 2.206).
 
-This fork updates the mod to work with newer versions of **Geode (v5)** and fixes AREDL API fetching by migrating from the old deprecated endpoint to the current **AREDL v2 API**.
+This fork updates the mod to work with newer versions of Geode (v5) and fixes AREDL API fetching by migrating from the old deprecated endpoint to the current AREDL v2 API.
 
 ## Credits
 
-- **Original mod:** [ItzKiba / GrandpaDemon](https://github.com/ItzKiba/GrandpaDemon)
-- This repo is an **unofficial update patch** for compatibility and API changes.
+- Original mod: [ItzKiba / GrandpaDemon](https://github.com/ItzKiba/GrandpaDemon)
+- This repo is an unofficial update patch for compatibility and API changes.
 
 ## What this fixes
 
