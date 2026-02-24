@@ -1,3 +1,33 @@
+# GrandpaDemon (Unofficial Geode v5 + AREDL v2 Fix)
+
+Unofficial compatibility patch/fork of **GrandpaDemon** by **ItzKiba**.
+
+This fork updates the mod to work with newer versions of **Geode (v5)** and fixes AREDL API fetching by migrating from the old deprecated endpoint to the current **AREDL v2 API**.
+
+## Credits
+
+- **Original mod:** [ItzKiba / GrandpaDemon](https://github.com/ItzKiba/GrandpaDemon)
+- This repo is an **unofficial update patch** for compatibility and API changes.
+
+## What this fixes
+
+### Geode v5 compatibility
+- Migrates web request handling to Geode v5 async API (`TaskHolder<web::WebResponse>`)
+- Replaces deprecated `CCARRAY_FOREACH` usage
+- Updates build settings for Geode v5 / C++23
+
+### AREDL API fixes
+- Updates the old AREDL endpoint to the current **v2** endpoint
+- Updates parsing logic from legacy `_id` to `level_id`
+
+### Stability / safety
+- Adds a safe fallback return in `getSpriteFromPosition(...)` to avoid undefined behavior
+
+## Tested On
+
+- **Geometry Dash:** `2.2081`
+- **Geode:** `5.0.1`
+
 # Grandpa Demon
 A mod created by ItzKiba.
 
