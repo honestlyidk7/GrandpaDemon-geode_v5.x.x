@@ -52,25 +52,41 @@ class $modify(LevelCell) {
 
         auto newPos = originalIcon->getPosition();
         newIcon->setPosition(originalIcon->getPosition());
-        newIcon->setZOrder(originalIcon->getZOrder()+25);
-        
-        for (unsigned int i = 0; i < originalIcon->getChildrenCount(); ++i) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(originalIcon->getChildren()->objectAtIndex(i))) {
-                if (newObj->getTag() == 69420) {
-                    newObj->removeFromParentAndCleanup(true);
+        newIcon->setZOrder(originalIcon->getZOrder() + 25);
+
+        // ---- SAFE CHILD HANDLING (declare once, reuse) ----
+        auto iconChildren = originalIcon->getChildren();
+
+        // Remove any previously moved sprites (tagged 69420)
+        if (iconChildren) {
+            for (unsigned int i = 0; i < iconChildren->count(); ++i) {
+                if (auto spr = dynamic_cast<CCSprite*>(iconChildren->objectAtIndex(i))) {
+                    if (spr->getTag() == 69420) {
+                        spr->removeFromParentAndCleanup(true);
+                    }
                 }
             }
         }
 
-        auto childrenCopy = CCArray::create();
-        childrenCopy->addObjectsFromArray(originalIcon->getChildren());
-        for (unsigned int i = 0; i < childrenCopy->count(); ++i) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(childrenCopy->objectAtIndex(i))) {
-                newObj->setTag(69420);
-                layer->addChild(newObj);
-                newObj->setPosition(newPos);
+        // Copy and reparent children safely
+        if (iconChildren && iconChildren->count() > 0) {
+            auto childrenCopy = CCArray::create();
+            childrenCopy->addObjectsFromArray(iconChildren);
+
+            for (unsigned int i = 0; i < childrenCopy->count(); ++i) {
+                if (auto spr = dynamic_cast<CCSprite*>(childrenCopy->objectAtIndex(i))) {
+                    spr->setTag(69420);
+
+                    // Safer reparent: detach from originalIcon before adding to layer
+                    spr->retain();
+                    spr->removeFromParentAndCleanup(false);
+                    layer->addChild(spr);
+                    spr->setPosition(newPos);
+                    spr->release();
+                }
             }
         }
+        // -----------------------------------------------
 
         originalIcon->setVisible(false);
 

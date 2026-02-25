@@ -21,20 +21,46 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
             return;
         }
 
+        // If this is null for any reason, we can't compare positions safely.
+        if (!m_difficultySprite) {
+            auto alert = FLAlertLayer::create(
+                "Error",
+                "There was a problem loading the demon difficulty face.\n"
+                "The difficulty sprite was not available.\n\n<cb>-Grandpa Demon</c>",
+                "OK"
+            );
+            alert->m_scene = this;
+            alert->show();
+            return;
+        }
+
         // Get the original difficulty icon
         CCSprite* originalIcon = nullptr;
         bool iconFound = false;
 
         // Iterate through every object that is a direct child of the layer to find the difficulty face.
-        for (unsigned int i = 0; i < this->getChildrenCount(); ++i) {
-            auto obj = this->getChildren()->objectAtIndex(i);
+        auto layerChildren = this->getChildren();
+        if (!layerChildren) {
+            auto alert = FLAlertLayer::create(
+                "Error",
+                "There was a problem loading the demon difficulty face.\n"
+                "Layer children were not available.\n\n<cb>-Grandpa Demon</c>",
+                "OK"
+            );
+            alert->m_scene = this;
+            alert->show();
+            return;
+        }
+
+        for (unsigned int i = 0; i < layerChildren->count(); ++i) {
+            auto obj = layerChildren->objectAtIndex(i);
             // Check to see if the object is a sprite.
             if (CCSprite* newObj = dynamic_cast<CCSprite*>(obj)) {
                 // Check to see if the object is the demon difficulty icon
                 // Note that the child-index "stars-icon" doesn't appear to work all the time.
                 // Instead of using an absolute index, get the object that fits the following criteria:
                 if (newObj->getPosition() == m_difficultySprite->getPosition()
-                && newObj->getZOrder() == 3) {
+                    && newObj->getZOrder() == 3) {
                     //newObj->setColor({0, 255, 0});
                     originalIcon = newObj;
                     iconFound = true;
@@ -45,7 +71,12 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
 
         // If the demon face somehow isn't found, notify the user.
         if (originalIcon == nullptr || !iconFound) {
-            auto alert = FLAlertLayer::create("Error", "There was a problem loading the demon difficulty face.\nYour sceen resolution may not be supported.\n\n<cb>-Grandpa Demon</c>", "OK");
+            auto alert = FLAlertLayer::create(
+                "Error",
+                "There was a problem loading the demon difficulty face.\n"
+                "Your sceen resolution may not be supported.\n\n<cb>-Grandpa Demon</c>",
+                "OK"
+            );
             alert->m_scene = this;
             alert->show();
             return;
@@ -57,24 +88,36 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
         
         auto newPos = originalIcon->getPosition();
         newIcon->setPosition(originalIcon->getPosition());
-        newIcon->setZOrder(originalIcon->getZOrder()+10);
-        
+        newIcon->setZOrder(originalIcon->getZOrder() + 10);
 
-        for (unsigned int i = 0; i < originalIcon->getChildrenCount(); ++i) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(originalIcon->getChildren()->objectAtIndex(i))) {
-                if (newObj->getTag() == 69420) {
-                    newObj->removeFromParentAndCleanup(true);
+        // Remove any previously-moved children (tagged 69420) from originalIcon safely.
+        auto iconChildren = originalIcon->getChildren();
+        if (iconChildren) {
+            for (unsigned int i = 0; i < iconChildren->count(); ++i) {
+                if (CCSprite* childSpr = dynamic_cast<CCSprite*>(iconChildren->objectAtIndex(i))) {
+                    if (childSpr->getTag() == 69420) {
+                        childSpr->removeFromParentAndCleanup(true);
+                    }
                 }
             }
         }
 
-        auto childrenCopy = CCArray::create();
-        childrenCopy->addObjectsFromArray(originalIcon->getChildren());
-        for (unsigned int i = 0; i < childrenCopy->count(); ++i) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(childrenCopy->objectAtIndex(i))) {
-                newObj->setTag(69420);
-                this->addChild(newObj);
-                newObj->setPosition(newPos);
+        // Copy children safely (getChildren() can be nullptr) and reparent safely.
+        if (iconChildren && iconChildren->count() > 0) {
+            auto childrenCopy = CCArray::create();
+            childrenCopy->addObjectsFromArray(iconChildren);
+
+            for (unsigned int i = 0; i < childrenCopy->count(); ++i) {
+                if (CCSprite* childSpr = dynamic_cast<CCSprite*>(childrenCopy->objectAtIndex(i))) {
+                    childSpr->setTag(69420);
+
+                    // Detach before reparenting to avoid undefined behavior
+                    childSpr->retain();
+                    childSpr->removeFromParentAndCleanup(false);
+                    this->addChild(childSpr);
+                    childSpr->setPosition(newPos);
+                    childSpr->release();
+                }
             }
         }
 

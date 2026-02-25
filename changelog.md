@@ -1,3 +1,6 @@
+# v1.2.2
+* Fixed compatibility issue with integrated demonlist
+
 # v1.2.1
 
 * Made compatible with 2.2081
